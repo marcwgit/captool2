@@ -10,7 +10,7 @@ echo "confirm: $filename"
 ## split the file name##
 
 #regex to split file name
-regex="([0-9]).srt"
+regex="([0-9])([0-9]).srt"
 
 
 ##    echo filename =~ *[0-9,0-9]*.srt
