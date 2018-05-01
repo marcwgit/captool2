@@ -12,6 +12,9 @@ echo "confirm: $filename"
 #regex to split file name
 # regex="([0-9])([0-9]).srt"  # first
 regex="(.+)-([0-9][0-9]).srt"
+dash="-"
+audiotype=".mp3"
+captype=".srt"
 
 
 ##    echo filename =~ *[0-9,0-9]*.srt
@@ -24,11 +27,11 @@ f=$filename
 
     if [[ $f =~ $regex ]]
     then
-        name1="${BASH_REMATCH[1]}"
-        name2="${BASH_REMATCH[2]}"
-        name3="${BASH_REMATCH[3]}"
-        echo "$name1"
-        echo "$name2"
+        fname="${BASH_REMATCH[1]}"
+        fnum="${BASH_REMATCH[2]}"
+ #       name3="${BASH_REMATCH[3]}" # not used
+        echo "$fname"
+        echo "$fnum"
         echo "$name3"
         
         echo "${name}.jpg"    # concatenate strings
@@ -38,5 +41,28 @@ f=$filename
     fi
 
 
+######    cp file-01.srt out.srt
 
+
+for ((i = 2; i < $((fnum)) + 1; i++))
+do
+		
+		if [$i le 10]
+			then
+				echo "in if"
+				ichar="0"+$i
+			else
+				ichar=$i
+		fi
+				
+	
+		srtfile=$fname$dash$ichar$captype
+		audiofile=$fname$dash$ichar$audiotype
+		echo $audiofile
+		echo $srtfile
+####	hms=$echo(ffprobe -i bettina--01.mp3  -v quiet -show_format -sexagesimal | sed -n 's/duration=//p'
+####	/home/marcwe/subedit/subedit -i file name -s +hms
+###	cat file >> out.srt
+	echo $i
+done
 
