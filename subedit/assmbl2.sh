@@ -10,7 +10,8 @@ echo "confirm: $filename"
 ## split the file name##
 
 #regex to split file name
-regex="([0-9])([0-9]).srt"
+# regex="([0-9])([0-9]).srt"  # first
+regex="(.+)-([0-9][0-9]).srt"
 
 
 ##    echo filename =~ *[0-9,0-9]*.srt
@@ -25,12 +26,17 @@ f=$filename
     then
         name1="${BASH_REMATCH[1]}"
         name2="${BASH_REMATCH[2]}"
+        name3="${BASH_REMATCH[3]}"
         echo "$name1"
         echo "$name2"
+        echo "$name3"
         
         echo "${name}.jpg"    # concatenate strings
         name="${name}.jpg"    # same thing stored in a variable
     else
         echo "$f doesn't match" >&2 # this could get noisy if there are a lot of non-matching files
     fi
+
+
+
 
