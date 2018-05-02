@@ -15,6 +15,7 @@ regex="(.+)-([0-9][0-9]).srt"
 dash="-"
 audiotype=".mp3"
 captype=".srt"
+j="j"
 
 
 ##    echo filename =~ *[0-9,0-9]*.srt
@@ -47,10 +48,11 @@ f=$filename
 for ((i = 2; i < $((fnum)) + 1; i++))
 do
 		
-		if [$i le 10]
+		if [ "$i" -lt 10 ]
 			then
 				echo "in if"
-				ichar="0"+$i
+				ichar="0"$i
+				#ichar="0"+$i
 			else
 				ichar=$i
 		fi
@@ -60,9 +62,21 @@ do
 		audiofile=$fname$dash$ichar$audiotype
 		echo $audiofile
 		echo $srtfile
-####	hms=$echo(ffprobe -i bettina--01.mp3  -v quiet -show_format -sexagesimal | sed -n 's/duration=//p'
+		
+		
+		jsrtfile=$j$fname$dash$ichar$captype
+		cp "$srtfile" "$jsrtfile"
+		
+		echo $jsrtfile
+		
+	### original	ffprobe -i bettina--01.mp3  -v quiet -show_format -sexagesimal | sed -n 's/duration=//p';
+		
+#		hms= "ffprobe -i "$audiofile"#  -v quiet -show_format -sexagesimal" # | "sed -n 's/duration=//p'"
+		hms=$(ffprobe -i $audiofile  -v quiet -show_format -sexagesimal | sed -n 's/duration=//p')
 ####	/home/marcwe/subedit/subedit -i file name -s +hms
 ###	cat file >> out.srt
+
+	echo $hms
 	echo $i
 done
 
