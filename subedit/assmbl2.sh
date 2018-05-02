@@ -13,9 +13,10 @@ echo "confirm: $filename"
 # regex="([0-9])([0-9]).srt"  # first
 regex="(.+)-([0-9][0-9]).srt"
 dash="-"
-audiotype=".mp3"
+audiotype=".m4a"
 captype=".srt"
 j="j"
+totalsec=0
 
 
 convertAndPrintSeconds() {
@@ -82,7 +83,23 @@ do
 				
 	
 		srtfile=$fname$dash$ichar$captype
-		audiofile=$fname$dash$ichar$audiotype
+		lastfilecount=$i-1
+		
+		
+		if [ "$((lastfilecount))" -lt 10 ]
+			then
+				echo "lastfilecount under 10"
+				lastfilecountchar="0"$lastfilecount
+				echo $lastfilecountchar
+			else
+				echo "no change of lastfilecount"
+		fi
+		
+		
+		
+
+		
+		audiofile=$fname$dash$lastfilecountchar$audiotype
 		echo $audiofile
 		echo $srtfile
 		
@@ -94,7 +111,6 @@ do
 		
 	### original	ffprobe -i bettina--01.mp3  -v quiet -show_format -sexagesimal | sed -n 's/duration=//p';
 		
-#		hms= "ffprobe -i "$audiofile"#  -v quiet -show_format -sexagesimal" # | "sed -n 's/duration=//p'"
 		sec=$(ffprobe -i $audiofile  -v quiet -show_format | sed -n 's/duration=//p')
 		hms=$(ffprobe -i $audiofile  -v quiet -show_format -sexagesimal | sed -n 's/duration=//p')
 		
@@ -102,10 +118,21 @@ do
 
 	echo $sec
 	echo $hms
+	
 	echo $sec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); print h ":" m ":" s'}
 	echo $sec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); printf "%02d" ":" "%02d" ":" "%02.3f",h, m, s'}
 	convhmsf=$(echo $sec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); printf "%02d" ":" "%02d" ":" "%02.3f",h, m, s'})
 	convhms=$(echo $sec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); print h ":" m ":" s'})
+	echo $convhms
+	echo $convhmsf
+	
+	let "totalsec=totalsec+sec"
+	echo $totalsec
+	
+	echo $totalsec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); print h ":" m ":" s'}
+	echo $totalsec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); printf "%02d" ":" "%02d" ":" "%02.3f",h, m, s'}
+	convhmsf=$(echo $totalsec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); printf "%02d" ":" "%02d" ":" "%02.3f",h, m, s'})
+	convhms=$(echo $totalsec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); print h ":" m ":" s'})
 	echo $convhms
 	echo $convhmsf
 	convhmsf=$(echo ${convhmsf} | sed 's/\./,/')
