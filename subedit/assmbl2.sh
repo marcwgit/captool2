@@ -64,8 +64,8 @@ f=$filename
         echo "$f doesn't match" >&2 # this could get noisy if there are a lot of non-matching files
     fi
 
-
-######    cp file-01.srt out.srt
+echo "$fname$dash"01"$captype"
+cp "$fname$dash"01"$captype" out.srt
 
 
 for ((i = 2; i < $((fnum)) + 1; i++))
@@ -98,9 +98,7 @@ do
 		sec=$(ffprobe -i $audiofile  -v quiet -show_format | sed -n 's/duration=//p')
 		hms=$(ffprobe -i $audiofile  -v quiet -show_format -sexagesimal | sed -n 's/duration=//p')
 		
-		
-####	/home/marcwe/subedit/subedit -i file name -s +hms
-###	cat file >> out.srt
+
 
 	echo $sec
 	echo $hms
@@ -110,10 +108,19 @@ do
 	convhms=$(echo $sec | awk {'h=int($0/3600);r=($0-(h*3600));m=int(r/60);s=(r-(m*60)); print h ":" m ":" s'})
 	echo $convhms
 	echo $convhmsf
+	convhmsf=$(echo ${convhmsf} | sed 's/\./,/')
+	echo $convhmsf
 	#$convhms=$(echo ${convhms//
 	
 #	echo convertAndPrintSeconds(${sec})
 #	echo hms($sec)
 	echo $i
+	
+			
+	bash /home/marcwe/subedit/subedit -i "$jsrtfile" -s +"$convhmsf"
+	cat "$jsrtfile" >> out.srt
+	
+	
+	
 done
 
