@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## read in the last srt file of the sequence ##
-## must be name-dd.srt
+## must be name-dd.srt for 01-99 or name-d.srt for 1-9
 echo -n "Enter the last file of the sequence > "
 read filename
 echo "confirm: $filename"
@@ -11,7 +11,8 @@ echo "confirm: $filename"
 
 #regex to split file name
 # regex="([0-9])([0-9]).srt"  # first
-regex="(.+)-([0-9][0-9]).srt"
+regex2="(.+)-([0-9][0-9]).srt"
+regex1="(.+)-([0-9]).srt"
 dash="-"
 audiotype=".m4a"
 captype=".srt"
@@ -50,10 +51,11 @@ convertAndPrintSeconds() {
 f=$filename
 
 
-    if [[ $f =~ $regex ]]
+    if [[ $f =~ $regex2 ]]
     then
         fname="${BASH_REMATCH[1]}"
         fnum="${BASH_REMATCH[2]}"
+        twodd=2
  #       name3="${BASH_REMATCH[3]}" # not used
         echo "$fname"
         echo "$fnum"
@@ -61,18 +63,38 @@ f=$filename
         
         echo "${name}.jpg"    # concatenate strings
         name="${name}.jpg"    # same thing stored in a variable
+        
+        echo "$fname$dash"01"$captype"
+		cp "$fname$dash"01"$captype" out.srt
+        
+    elif [[ $f =~ $regex1 ]]
+    then
+        fname="${BASH_REMATCH[1]}"
+        fnum="${BASH_REMATCH[2]}"
+        oned=1
+ #       name3="${BASH_REMATCH[3]}" # not used
+        echo "$fname"
+        echo "$fnum"
+        echo "$name3"
+        
+        echo "${name}.jpg"    # concatenate strings
+        name="${name}.jpg"    # same thing stored in a variable
+        
+        echo "$fname$dash"1"$captype"
+		cp "$fname$dash"1"$captype" out.srt
+        
     else
         echo "$f doesn't match" >&2 # this could get noisy if there are a lot of non-matching files
     fi
 
-echo "$fname$dash"01"$captype"
-cp "$fname$dash"01"$captype" out.srt
+## echo "$fname$dash"01"$captype"  #moved into if
+## cp "$fname$dash"01"$captype" out.srt    #moved into if
 
 
 for ((i = 2; i < $((fnum)) + 1; i++))
 do
 		
-		if [ "$i" -lt 10 ]
+		if [ "$i" -lt 10 ] && [ "$twodd" -eq 2 ]
 			then
 				echo "in if"
 				ichar="0"$i
@@ -87,7 +109,7 @@ do
 		echo $lastfilecount " before if"
 		
 		
-		if [ "$((lastfilecount))" -lt 10 ]
+		if [ "$((lastfilecount))" -lt 10 ] && [ "$twodd" -eq 2 ]
 			then
 				echo "lastfilecount under 10"
 				echo $lastfilecount " in if"
