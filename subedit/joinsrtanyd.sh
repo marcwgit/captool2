@@ -2,6 +2,8 @@
 
 ## read in the last srt file of the sequence ##
 ## must be name-dd.srt for 01-99 or name-d.srt for 1-9
+
+#try to use date to add times
 echo -n "Enter the last file of the sequence > "
 read filename
 echo "confirm: $filename"
