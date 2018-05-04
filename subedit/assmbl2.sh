@@ -14,7 +14,7 @@ echo "confirm: $filename"
 regex2="(.+)-([0-9][0-9]).srt"
 regex1="(.+)-([0-9]).srt"
 dash="-"
-audiotype=".m4a"
+audiotype=".mp3"
 captype=".srt"
 j="j"
 #let "totalsec=0"
@@ -56,6 +56,7 @@ f=$filename
         fname="${BASH_REMATCH[1]}"
         fnum="${BASH_REMATCH[2]}"
         twodd=2
+        echo $twodd "two digits"
  #       name3="${BASH_REMATCH[3]}" # not used
         echo "$fname"
         echo "$fnum"
@@ -72,6 +73,7 @@ f=$filename
         fname="${BASH_REMATCH[1]}"
         fnum="${BASH_REMATCH[2]}"
         oned=1
+        echo $oned " one digit"
  #       name3="${BASH_REMATCH[3]}" # not used
         echo "$fname"
         echo "$fnum"
@@ -91,10 +93,15 @@ f=$filename
 ## cp "$fname$dash"01"$captype" out.srt    #moved into if
 
 
+echo $fnum " fnum"
+
+fnum=$(echo ${fnum} | sed 's/0//')
+echo $((fnum)) " ((fnum))"
+
 for ((i = 2; i < $((fnum)) + 1; i++))
 do
 		
-		if [ "$i" -lt 10 ] && [ "$twodd" -eq 2 ]
+		if [ "$i" -lt 10 ] && [ "$((twodd))" -eq 2 ]
 			then
 				echo "in if"
 				ichar="0"$i
@@ -109,21 +116,21 @@ do
 		echo $lastfilecount " before if"
 		
 		
-		if [ "$((lastfilecount))" -lt 10 ] && [ "$twodd" -eq 2 ]
-			then
-				echo "lastfilecount under 10"
-				echo $lastfilecount " in if"
-				lastfilecountchar="0"$lastfilecount
-				echo $lastfilecountchar
-			else
-				echo "no change of lastfilecount"
-		fi
+#		if [ "$((lastfilecount))" -lt 10 ] && [ "$((twodd))" -eq 2 ]
+#			then
+#				echo "lastfilecount under 10"
+#				echo $lastfilecount " in if"
+#				lastfilecountchar="0"$lastfilecount
+#				echo $lastfilecountchar
+#			else
+#				echo "no change of lastfilecount"
+#		fi
 		
 		
 		
 
-		
-		audiofile=$fname$dash$lastfilecountchar$audiotype
+		audiofile=$fname$dash$ichar$audiotype
+#		audiofile=$fname$dash$lastfilecountchar$audiotype  # not needed
 		echo $audiofile
 		echo $srtfile
 		
